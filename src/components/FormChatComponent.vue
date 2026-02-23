@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, getCurrentInstance, ref } from "vue";
 import axios from "axios";
 
 export default defineComponent({
@@ -35,10 +35,16 @@ export default defineComponent({
     const sessionToken = ref(props.session_token || "");
     const sessionId = ref(props.session_id || "");
     const counter = ref("");
+    const emitter = getCurrentInstance()?.appContext.config.globalProperties
+      .emitter as
+      | {
+          emit: (event: string, payload: unknown) => void;
+        }
+      | undefined;
 
-    const sendAsk = async function (this: any, e: Event) {
+    const sendAsk = async (e: Event) => {
       e.preventDefault();
-      this.emitter.emit("messagesent", this.question);
+      emitter?.emit("messagesent", question.value);
       try {
         const response = await axios.post(
           `${process.env.VUE_APP_BACK_URL}/api/conversation`,
@@ -54,7 +60,7 @@ export default defineComponent({
         sessionId.value = response.data.sessionId;
         counter.value =
           response.data.counters >= 1 ? response.data.counters : "";
-        this.emitter.emit("messagesSendBot", response.data);
+        emitter?.emit("messagesSendBot", response.data);
         //vm.answer = _.capitalize(response.data.answer)
       } catch (error) {
         answer.value = "Error! Could not reach the API. " + error;
