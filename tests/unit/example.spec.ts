@@ -1,12 +1,30 @@
-import { shallowMount } from "@vue/test-utils";
-import HelloWorld from "@/components/HelloWorld.vue";
+import { mount } from "@vue/test-utils";
+import App from "@/App.vue";
 
-describe("HelloWorld.vue", () => {
-  it("renders props.msg when passed", () => {
-    const msg = "new message";
-    const wrapper = shallowMount(HelloWorld, {
-      props: { msg },
+describe("App landing", () => {
+  beforeAll(() => {
+    Object.defineProperty(window, "IntersectionObserver", {
+      writable: true,
+      value: class {
+        observe() {
+          return undefined;
+        }
+        unobserve() {
+          return undefined;
+        }
+        disconnect() {
+          return undefined;
+        }
+      },
     });
-    expect(wrapper.text()).toMatch(msg);
+  });
+
+  it("renders the new chatbot sales hero", () => {
+    const wrapper = mount(App);
+
+    expect(wrapper.text()).toContain("Vende incluso cuando tu equipo duerme.");
+    expect(wrapper.text()).toContain(
+      "Chatbots para ventas y soporte en modo 24/7"
+    );
   });
 });
