@@ -60,7 +60,7 @@
             <div class="mockup-dots">
               <span></span><span></span><span></span>
             </div>
-            <span class="mockup-title">ChatterBoyFly AI</span>
+            <span class="mockup-title">ChatterBotFly AI</span>
           </div>
           <div class="mockup-body">
             <div class="message bot-message">
@@ -79,7 +79,7 @@
                 </svg>
               </div>
               <div class="message-content">
-                ¡Hola! Soy ChatterBoyFly. ¿En qué puedo ayudarte hoy?
+                ¡Hola! Soy ChatterBotFly. ¿En qué puedo ayudarte hoy?
               </div>
             </div>
             <div class="message user-message">
@@ -150,54 +150,56 @@ import { onMounted } from "vue";
 import gsap from "gsap";
 
 onMounted(() => {
+  const ease = "power3.out";
+
   gsap.from(".hero-badge", {
     opacity: 0,
-    y: 30,
-    duration: 0.8,
-    delay: 0.2,
+    y: 20,
+    duration: 0.7,
+    ease,
+    delay: 0.1,
   });
-
   gsap.from(".hero-title", {
     opacity: 0,
-    y: 50,
-    duration: 1,
-    delay: 0.4,
+    y: 40,
+    duration: 0.9,
+    ease,
+    delay: 0.3,
   });
-
   gsap.from(".hero-subtitle", {
     opacity: 0,
     y: 30,
     duration: 0.8,
-    delay: 0.6,
+    ease,
+    delay: 0.5,
   });
-
   gsap.from(".hero-buttons", {
     opacity: 0,
     y: 30,
     duration: 0.8,
-    delay: 0.8,
+    ease,
+    delay: 0.65,
   });
-
   gsap.from(".hero-stats", {
     opacity: 0,
     y: 30,
     duration: 0.8,
-    delay: 1,
+    ease,
+    delay: 0.8,
   });
-
   gsap.from(".hero-visual", {
     opacity: 0,
     x: 50,
-    duration: 1.2,
-    delay: 0.6,
+    duration: 1.0,
+    ease,
+    delay: 0.3,
   });
-
   gsap.from(".floating-element", {
     opacity: 0,
     scale: 0,
     duration: 0.6,
-    stagger: 0.2,
-    delay: 1.2,
+    stagger: 0.15,
+    delay: 1.0,
     ease: "back.out(1.7)",
   });
 });

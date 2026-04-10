@@ -1,5 +1,5 @@
 <template>
-  <section id="features" class="features-section">
+  <section ref="sectionRef" id="features" class="features-section">
     <div class="features-bg">
       <div class="feature-gradient"></div>
     </div>
@@ -69,9 +69,9 @@
               <span class="code-dot yellow"></span>
               <span class="code-dot green"></span>
             </div>
-            <pre><code><span class="code-keyword">import</span> { ChatterBoyFly } <span class="code-keyword">from</span> <span class="code-string">'@chatterboyfly/sdk'</span>
+            <pre><code><span class="code-keyword">import</span> { ChatterBotFly } <span class="code-keyword">from</span> <span class="code-string">'@chatterbotfly/sdk'</span>
 
-<span class="code-keyword">const</span> bot = <span class="code-keyword">new</span> <span class="code-function">ChatterBoyFly</span>({
+<span class="code-keyword">const</span> bot = <span class="code-keyword">new</span> <span class="code-function">ChatterBotFly</span>({
   apiKey: <span class="code-string">'your-api-key'</span>,
   model: <span class="code-string">'gpt-4'</span>,
   <span class="code-comment">// Configura tu chatbot</span>
@@ -88,11 +88,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, h } from "vue";
+import { onMounted, onUnmounted, ref, h } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const sectionRef = ref<HTMLElement | null>(null);
+let ctx: ReturnType<typeof gsap.context>;
 
 const MessageIcon = () =>
   h(
@@ -270,37 +273,37 @@ const integrations = [
 ];
 
 onMounted(() => {
-  gsap.from(".section-header", {
-    scrollTrigger: {
-      trigger: ".section-header",
-      start: "top 80%",
-    },
-    opacity: 0,
-    y: 50,
-    duration: 1,
-  });
+  ctx = gsap.context(() => {
+    const ease = "power3.out";
 
-  gsap.from(".feature-card", {
-    scrollTrigger: {
-      trigger: ".features-grid",
-      start: "top 80%",
-    },
-    opacity: 0,
-    y: 60,
-    stagger: 0.15,
-    duration: 0.8,
-  });
+    gsap.from(".section-header", {
+      scrollTrigger: { trigger: ".section-header", start: "top 85%" },
+      opacity: 0,
+      y: 40,
+      duration: 0.9,
+      ease,
+    });
 
-  gsap.from(".features-showcase", {
-    scrollTrigger: {
-      trigger: ".features-showcase",
-      start: "top 80%",
-    },
-    opacity: 0,
-    y: 50,
-    duration: 1,
-  });
+    gsap.from(".feature-card", {
+      scrollTrigger: { trigger: ".features-grid", start: "top 85%" },
+      opacity: 0,
+      y: 40,
+      stagger: 0.12,
+      duration: 0.75,
+      ease,
+    });
+
+    gsap.from(".features-showcase", {
+      scrollTrigger: { trigger: ".features-showcase", start: "top 85%" },
+      opacity: 0,
+      y: 40,
+      duration: 0.9,
+      ease,
+    });
+  }, sectionRef);
 });
+
+onUnmounted(() => ctx?.revert());
 </script>
 
 <style lang="scss" scoped>

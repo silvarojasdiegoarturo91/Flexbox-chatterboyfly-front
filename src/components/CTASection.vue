@@ -1,5 +1,5 @@
 <template>
-  <section id="contact" class="cta-section">
+  <section ref="sectionRef" id="contact" class="cta-section">
     <div class="cta-container">
       <div class="cta-content">
         <span class="cta-badge">¡Empieza Hoy!</span>
@@ -7,7 +7,7 @@
           ¿Listo para transformar tu atención al cliente?
         </h2>
         <p class="cta-subtitle">
-          Únete a miles de empresas que ya usan ChatterBoyFly para automatizar
+          Únete a miles de empresas que ya usan ChatterBotFly para automatizar
           su comunicación
         </p>
         <div class="cta-buttons">
@@ -99,7 +99,7 @@
               <circle cx="8" cy="14" r="1" />
               <circle cx="16" cy="14" r="1" />
             </svg>
-            <span>ChatterBoyFly</span>
+            <span>ChatterBotFly</span>
           </div>
           <p class="footer-description">
             Chatbots inteligentes que transforman la comunicación con tus
@@ -180,7 +180,7 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2024 ChatterBoyFly. Todos los derechos reservados.</p>
+        <p>&copy; 2024 ChatterBotFly. Todos los derechos reservados.</p>
         <div class="footer-legal">
           <a href="#">Términos</a>
           <a href="#">Privacidad</a>
@@ -192,57 +192,59 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const sectionRef = ref<HTMLElement | null>(null);
+let ctx: ReturnType<typeof gsap.context>;
+
 onMounted(() => {
-  gsap.from(".cta-content", {
-    scrollTrigger: {
-      trigger: ".cta-section",
-      start: "top 80%",
-    },
-    opacity: 0,
-    x: -50,
-    duration: 1,
-  });
+  ctx = gsap.context(() => {
+    const ease = "power3.out";
 
-  gsap.from(".cta-visual", {
-    scrollTrigger: {
-      trigger: ".cta-section",
-      start: "top 80%",
-    },
-    opacity: 0,
-    x: 50,
-    duration: 1,
-    delay: 0.3,
-  });
+    gsap.from(".cta-content", {
+      scrollTrigger: { trigger: ".cta-section", start: "top 85%" },
+      opacity: 0,
+      x: -50,
+      duration: 0.9,
+      ease,
+    });
 
-  gsap.from(".float-card", {
-    scrollTrigger: {
-      trigger: ".cta-visual",
-      start: "top 80%",
-    },
-    opacity: 0,
-    scale: 0,
-    stagger: 0.15,
-    duration: 0.6,
-    delay: 0.5,
-    ease: "back.out(1.7)",
-  });
+    gsap.from(".cta-visual", {
+      scrollTrigger: { trigger: ".cta-section", start: "top 85%" },
+      opacity: 0,
+      x: 50,
+      duration: 0.9,
+      ease,
+      delay: 0.2,
+    });
 
-  gsap.to(".cta-visual", {
-    scrollTrigger: {
-      trigger: ".cta-section",
-      start: "top bottom",
-      end: "bottom top",
-      scrub: 1,
-    },
-    y: -50,
-  });
+    gsap.from(".float-card", {
+      scrollTrigger: { trigger: ".cta-visual", start: "top 85%" },
+      opacity: 0,
+      scale: 0,
+      stagger: 0.12,
+      duration: 0.6,
+      ease: "back.out(1.7)",
+    });
+
+    // Parallax sutil en el visual al hacer scroll
+    gsap.to(".cta-visual", {
+      scrollTrigger: {
+        trigger: ".cta-section",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+      },
+      y: -50,
+    });
+  }, sectionRef);
 });
+
+onUnmounted(() => ctx?.revert());
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 <template>
-  <section id="demo" class="demo-section">
+  <section ref="sectionRef" id="demo" class="demo-section">
     <div class="demo-container">
       <div class="demo-header">
         <span class="demo-badge">Prueba Gratis</span>
@@ -8,7 +8,7 @@
           <span class="gradient-text">Asistente IA</span>
         </h2>
         <p class="demo-subtitle">
-          Experimenta la potencia de ChatterBoyFly en acción
+          Experimenta la potencia de ChatterBotFly en acción
         </p>
       </div>
 
@@ -31,7 +31,7 @@
                 </svg>
               </div>
               <div class="bot-info">
-                <span class="bot-name">ChatterBoyFly AI</span>
+                <span class="bot-name">ChatterBotFly AI</span>
                 <span class="bot-status">
                   <span class="status-dot"></span>
                   En línea
@@ -161,11 +161,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const sectionRef = ref<HTMLElement | null>(null);
+let ctx: ReturnType<typeof gsap.context>;
 
 const chatRef = ref<HTMLElement | null>(null);
 const messagesRef = ref<HTMLElement | null>(null);
@@ -175,7 +178,7 @@ const isTyping = ref(false);
 const messages = ref([
   {
     from: "bot",
-    text: "¡Hola! 👋 Soy ChatterBoyFly, tu asistente de IA. Estoy aquí para ayudarte con cualquier pregunta sobre nuestros chatbots. ¿En qué puedo asistirte hoy?",
+    text: "¡Hola! 👋 Soy ChatterBotFly, tu asistente de IA. Estoy aquí para ayudarte con cualquier pregunta sobre nuestros chatbots. ¿En qué puedo asistirte hoy?",
   },
 ]);
 
@@ -233,38 +236,38 @@ const scrollToBottom = () => {
 };
 
 onMounted(() => {
-  gsap.from(".demo-header", {
-    scrollTrigger: {
-      trigger: ".demo-section",
-      start: "top 80%",
-    },
-    opacity: 0,
-    y: 50,
-    duration: 1,
-  });
+  ctx = gsap.context(() => {
+    const ease = "power3.out";
 
-  gsap.from(".chat-interface", {
-    scrollTrigger: {
-      trigger: ".demo-section",
-      start: "top 70%",
-    },
-    opacity: 0,
-    x: -50,
-    duration: 1,
-    delay: 0.3,
-  });
+    gsap.from(".demo-header", {
+      scrollTrigger: { trigger: ".demo-section", start: "top 85%" },
+      opacity: 0,
+      y: 40,
+      duration: 0.9,
+      ease,
+    });
 
-  gsap.from(".demo-features", {
-    scrollTrigger: {
-      trigger: ".demo-section",
-      start: "top 70%",
-    },
-    opacity: 0,
-    x: 50,
-    duration: 1,
-    delay: 0.5,
-  });
+    gsap.from(".chat-interface", {
+      scrollTrigger: { trigger: ".demo-wrapper", start: "top 85%" },
+      opacity: 0,
+      x: -50,
+      duration: 0.9,
+      ease,
+      delay: 0.2,
+    });
+
+    gsap.from(".demo-features", {
+      scrollTrigger: { trigger: ".demo-wrapper", start: "top 85%" },
+      opacity: 0,
+      x: 50,
+      duration: 0.9,
+      ease,
+      delay: 0.35,
+    });
+  }, sectionRef);
 });
+
+onUnmounted(() => ctx?.revert());
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 <template>
-  <section id="pricing" class="pricing-section">
+  <section ref="sectionRef" id="pricing" class="pricing-section">
     <div class="pricing-bg">
       <div class="pricing-orb orb-1"></div>
       <div class="pricing-orb orb-2"></div>
@@ -66,11 +66,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const sectionRef = ref<HTMLElement | null>(null);
+let ctx: ReturnType<typeof gsap.context>;
 
 const plans = [
   {
@@ -122,27 +125,29 @@ const plans = [
 ];
 
 onMounted(() => {
-  gsap.from(".section-header", {
-    scrollTrigger: {
-      trigger: ".pricing-section",
-      start: "top 80%",
-    },
-    opacity: 0,
-    y: 50,
-    duration: 1,
-  });
+  ctx = gsap.context(() => {
+    const ease = "power3.out";
 
-  gsap.from(".pricing-card", {
-    scrollTrigger: {
-      trigger: ".pricing-grid",
-      start: "top 80%",
-    },
-    opacity: 0,
-    y: 60,
-    stagger: 0.2,
-    duration: 0.8,
-  });
+    gsap.from(".section-header", {
+      scrollTrigger: { trigger: ".pricing-section", start: "top 85%" },
+      opacity: 0,
+      y: 40,
+      duration: 0.9,
+      ease,
+    });
+
+    gsap.from(".pricing-card", {
+      scrollTrigger: { trigger: ".pricing-grid", start: "top 85%" },
+      opacity: 0,
+      y: 40,
+      stagger: 0.12,
+      duration: 0.75,
+      ease,
+    });
+  }, sectionRef);
 });
+
+onUnmounted(() => ctx?.revert());
 </script>
 
 <style lang="scss" scoped>
